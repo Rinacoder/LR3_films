@@ -1,21 +1,12 @@
 <?php
 
-$array_info = parse_ini_file('parameters.ini', true);
-$main_info = 'mysql:host='.$array_info['host'].';dbname='.$array_info['name'];
-    $login = $array_info['login'];
-    $password = $array_info['password'];
-    //print_r ($array_info);
-    
- //= new PDO($main_info, $login,  $password);
-try 
-		{
-			$connection = new PDO($main_info, $login, '');
-		}
-		 catch (PDOException $e) 
-		{
-			print "Has errors: " . $e->getMessage(); die();
-		}
-$stmt = "SELECT * FROM film";
+require "conect.php";
+global $connection;
+$sth = $connection -> prepare("SELECT * FROM film");
+$sth->execute();
+$array = $sth -> fetchALL(PDO::FETCH_ASSOC);
+
+//$stmt = "SELECT * FROM film";
 
 
 
@@ -32,12 +23,12 @@ $stmt = "SELECT * FROM film";
 </tr>
 
   <?php 
-  foreach ($connection -> query($stmt) as $row) {
-    $film_name = $row['film_name']  ;
-    $poster = $row['poster']  ;
-    $reference_trailer = $row['reference_trailer']  ;
-    $release_year = $row['release_year']  ;
-    $director = $row['director'] ;
+  for ($i = 0; $i < count($array); $i++) {
+    $film_name = $array[$i]['film_name'];
+    $poster = $array[$i]['poster']  ;
+    $reference_trailer = $array[$i]['reference_trailer']  ;
+    $release_year = $array[$i]['release_year']  ;
+    $director = $array[$i]['director'] ;
     print('<tr>
     <td>'.$film_name.'</td>
     <td>'.$poster.'</td>
